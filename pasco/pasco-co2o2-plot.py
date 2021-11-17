@@ -24,10 +24,13 @@ writer = csv.writer(f)
 #Koble til PASCO-sensorene
 codenode = CodeNodeDevice()
 codenode.connect_by_id('354-873')  #NB Endre til ID på din //code.Node
+codenode.keepalive()
 o2sensor = PASCOBLEDevice()
 o2sensor.connect_by_id('574-083')  #NB Endre ID til din O2-sensor
+o2sensor.keepalive()
 co2sensor = PASCOBLEDevice()
 co2sensor.connect_by_id('429-980')  #NB Endre ID til din CO2-sensor
+co2sensor.keepalive()
 
 #Lag tomme lister hvor det er mulig å lagre data fra koden
 tid = []
@@ -43,7 +46,7 @@ tid_start = time.time()
 print("   Tid   O2         CO2     Fukt    Temp")
 
 #Gjenta følgende kode (med innrykk) flere ganger
-for i in range(0,60):
+for i in range(0,600):
     
     #Les data fra Pasco-sensorene
     tid_verdi  = time.time() - tid_start
@@ -76,7 +79,7 @@ for i in range(0,60):
     #Skriv ut data til skjerm
     print("{:5.1f}s {:5.1f}% {:7.0f}ppm   {:5.1f}% {:5.1f}C".format(
         tid_verdi,o2_verdi,co2_verdi,fukt_verdi,temp_verdi))
-    #time.sleep(1)
+    time.sleep(5)
 
 #Lukk filene på en ryddig måte når vi er ferdig med å skrive
 f.close()
