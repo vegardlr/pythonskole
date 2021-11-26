@@ -6,7 +6,7 @@ setup(
   packages = ['pythonskole'],   # Chose the same as "name"
   version = '0.3',      # Start with a small number and increase it with every change you make
   license='gpl-3.0',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
-  description = 'Codes to do fun educational stuff in Python',   # Give a short description about your library
+  description = 'Koder til bruk i undervisning i Python',   # Give a short description about your library
   author = 'Vegard Lundby Rekaa',                   # Type in your name
   author_email = 'vegard@pythonskole.no',      # Type in your E-Mail
   url = 'https://github.com/vegardlr/pythonskole',   # Provide either the link to your github or to your website
