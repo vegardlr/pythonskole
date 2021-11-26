@@ -1,0 +1,4 @@
+Tyngdekraft: 
+ - Videoopptak (aktiveres/deaktiveres med brukergrensesnitt)
+ - Fix kollisjoner (aktiveres/deaktiveres med brukergrensesnitt)
+
