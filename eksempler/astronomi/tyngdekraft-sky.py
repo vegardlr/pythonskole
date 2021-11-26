@@ -1,9 +1,13 @@
-
 # SIMULERING MED TYNGDEKRAFT I PYTHON
-# KJØRT PÅ EN HELT VANLIG LAPTOP :)
-# Pythonskole.no 25.11.2021
+# Pythonskole.no 26.11.2021
 #
 # Versjon 1: Lag en sky med mange små asteroider, og to planeter. 
+
+#Installer pythonskole på ditt system med: 
+#  pip install pythonskole
+#Importer pythonskole.astronomi sin Tyngdekraft-funksjon
+from pythonskole import astronomi
+from pythonskole.astronomi import Tyngdekraft
 
 # Importer noen utvalgte funksjoner fra numpy
 # som vi trenger for å lage lister med tall (arrays), 
@@ -11,30 +15,39 @@
 # og komponenter
 from numpy import array, random, sin, cos, pi
 
-#Importer pythonskole for å bruke Tyngdekraft-modulen
-from pythonskole import Tyngdekraft
 
-# Lag ditt 2D-rom, og bestem størrelsen L 
-# (boksen blir da LxL stor)
-modell = Tyngdekraft(L=20.0,tittel="Sky")
+# Lag ditt 2D-rom, og bestem: 
+#  - størrelsen L (hvor stor boksen skal være, LxL)
+#  - Hvilken tittel du vil ha skrevet i plottevinduet
+modell = Tyngdekraft(L=20.0,tittel="Tre store og en sky")
 
-# Kopier posisjonen i midten av boksen, som heter midten, 
-# og boksens størrelse L
+# Kopier verdiene for boksens størrelse L og koordinatene til
+# midten av plottevinduet, for de tallene trenger vi flere ganger
+# nå vi skal bestemme hvor planetene i simuleringen skal ligge. 
 L = modell.L
 midten = modell.midten
 
-# Legg til et stort objekt med stor radius (størrelse)
-# og sett den i midten
+# Nå skal vi legge til objekter/planeter i modellen. Da 
+# trenger vi funksjonen nyttObjekt som bruker følgende argumenter: 
+#   modell.nyttObjekt(posisjon, fart, radius)
+#     - posisjon er en vektor med to elementer (f.eks. [1,3])
+#     - fart er en vektor med to elementer
+#     - radius er et vanlig desimaltall
+
+# Legg til et stort objekt i modellen. 
+# Sett den i midten, gi den null fart og stor radius (200)
 modell.nyttObjekt(midten,[0,0],200.)
-# Legg til to middels objekt like til 
-# venstre og høyre for midten...
+# Legg til to middels store objekter like til 
+# venstre og høyre for midten, og gi dem fart i y-retning
 modell.nyttObjekt(midten+[-2.0,0],[0,3.0],30.)
 modell.nyttObjekt(midten+[+2.0,0],[0,-3.0],30.)
 
-#Legg til mange små satser, ved å gjenta de neste linjene med
-#kode mange ganger. Hver gang trekkes verdier for posisjon, 
-#hastighet og størrelse fra en tilfeldig tallgenerator. 
-for i in range(10):
+#Legg til mange små objekter.
+#Ved å gjenta de neste linjene med kode mange ganger. Til hver gang 
+#et nytt objekt lages trekkes verdier for posisjon, hastighet og 
+#størrelse som tilfeldige tall
+
+for i in range(10): #Øk dette talletom du vil ha flere små-objekter
 
     #Hvert objekt får radius som er trukket fra et tilfeldig tall
     #mellom 1.0 og 1.5
@@ -47,7 +60,7 @@ for i in range(10):
     #Hvert objekt får en tilfeldig fart (i absolutt størrelse, 
     #foreløpig uten retning) som er gitt av objektets størrelse og 
     #avstand til midten
-    fart      = 7.0*radius/avstand
+    fart      = 6.0*radius*radius/avstand
 
     #Retningen farten får er bestemt av en vinkel, som også trekkes 
     #som et tilfeldig tall mellom 0 og 360 grader. Vinkelen er gitt
