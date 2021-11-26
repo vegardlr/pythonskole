@@ -189,7 +189,7 @@ class Tyngdekraft():
         offset = self.cog - self.midten
         self.ax.set_xlim(self.ax.get_xlim()+offset[0])
         self.ax.set_ylim(self.ax.get_ylim()+offset[1])
-        self.ax.set_title("Pythonskole/Tyngdekraft/"+self.title)
+        self.ax.set_title("Tyngdekraft (pythonskole.no)\n"+self.title)
         self.midten = self.cog
 
     def update(self,frame_number):
