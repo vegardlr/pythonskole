@@ -6,7 +6,6 @@
 #Installer pythonskole på ditt system med: 
 #  pip install pythonskole
 #Importer pythonskole.astronomi sin Tyngdekraft-funksjon
-from pythonskole import astronomi
 from pythonskole.astronomi import Tyngdekraft
 
 # Importer noen utvalgte funksjoner fra numpy
@@ -47,7 +46,7 @@ modell.nyttObjekt(midten+[+2.0,0],[0,-3.0],30.)
 #et nytt objekt lages trekkes verdier for posisjon, hastighet og 
 #størrelse som tilfeldige tall
 
-for i in range(10): #Øk dette talletom du vil ha flere små-objekter
+for i in range(300): #Øk dette talletom du vil ha flere små-objekter
 
     #Hvert objekt får radius som er trukket fra et tilfeldig tall
     #mellom 1.0 og 1.5
