@@ -1,3 +1,6 @@
+# TEST-KODER
+*.test.py
+
 # VIM
 *.swp
 

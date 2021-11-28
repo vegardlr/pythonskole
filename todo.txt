@@ -1,4 +1,15 @@
 Tyngdekraft: 
+ - Add sys to dependencies in pypi conf
+ - Rediger eksempler til å unngå L som parameter
+ - Fikse alle eksempler til nye parametere
  - Videoopptak (aktiveres/deaktiveres med brukergrensesnitt)
- - Fix kollisjoner (aktiveres/deaktiveres med brukergrensesnitt)
+ -  
+ - Fix konsistente størrelser på objektene, og skalere med L i nyttObjekt
+	s=area of the marker. 
+	https://stackoverflow.com/questions/14827650/pyplot-scatter-plot-marker-size
 
+
+Framtidig fiks
+ - Fix kollisjoner (aktiveres/deaktiveres med brukergrensesnitt)
+ - Fix dtype syntax to future version
+ - Følgemetode av cog

@@ -1,9 +1,7 @@
 ###   Pythonskole.no    Tyngdekraft    ###
-### 24.11.2021  kontakt@pythonskole.no ###
-### Versjon 1.0
-### Planlagte oppgraderinger: 
-###  - Teste og reaktivere kollisjoner
+###   28.11.2021  kontakt@pythonskole.no ###
 
+import sys # TODO Remove this on publish
 import numpy as np
 import matplotlib.pyplot as plt 
 from matplotlib import animation
@@ -21,25 +19,27 @@ class Tyngdekraft():
         self.n = 0
         self.L = L
         self.interval=10
-        self.midten = np.array([L/2.,L/2.])
-        self.cog = self.midten
+        self.center = np.array([0,0])
+        self.midten = self.center
+        self.cog = self.center
         self.title = tittel
+        self.activate_collisions = False
+        self.diagnostic_output = False
+        self.follow_center_of_gravity = False
+        self.exit_at_next_iteration = False
 
-
-    def nyttObjekt(self,pos,vel,size):
+    def nyttObjekt(self,pos,vel,mass):
         datatype = np.dtype([
             ('pos', np.float64 , 2),('vel', np.float64 , 2),
             ('acc', np.float64 , 2),('force', np.float64 , 2),
             ('mass', np.float64 , 1),('size', np.float64 , 1)])
-        mass = size**2
-        force = np.zeros(2)
         new = np.zeros(1,dtype=datatype) 
-        new["pos"] = pos
-        new["vel"] = vel
-        new["acc"] = np.zeros(2)
+        new["pos"]   = pos
+        new["vel"]   = vel
+        new["acc"]   = np.zeros(2)
         new["force"] = np.zeros(2)
-        new["mass"] = mass
-        new["size"] = size
+        new["mass"]  = mass
+        new["size"]  = self.sizeFromMass(mass)
         if self.n > 0:
             self.obj = np.append(self.obj,new)
         else:
@@ -53,11 +53,11 @@ class Tyngdekraft():
 ######################
 ######################
 
-    def calculate_forces(self,mode='std'):
+    def calculate_forces(self):
         # Use linear algebra to calculate the forces acting 
         # between each and every planet in the simulation, 
         # using the N-body method. 
-        gravity_factor = 0.0005
+        gravity_factor = 0.1
         ones = np.ones(self.n)
         # Get mass and positions of planets
         m = self.obj["mass"][:]
@@ -67,10 +67,10 @@ class Tyngdekraft():
         dx = np.outer(ones,x) - np.outer(x,ones)
         dy = np.outer(ones,y) - np.outer(y,ones)
         m2 = np.outer(ones,m) * np.outer(m,ones)
-        d2 = dx**2 + dy**2
-        np.fill_diagonal(d2,np.inf)
+        d = np.sqrt(dx**2 + dy**2)
+        np.fill_diagonal(d,np.inf)
         # Calculate gravity, angle between positions, and force components
-        f  = gravity_factor*m2/d2
+        f  = gravity_factor*m2/d  #3D: gravity_factor*m2/d2
         theta = np.arctan2(dy, dx)
         fx = np.sum(f * np.cos(theta),1)
         fy = np.sum(f * np.sin(theta),1)
@@ -78,8 +78,18 @@ class Tyngdekraft():
         self.obj["force"] = np.transpose(np.vstack((fx,fy)))
         self.obj["acc"]   = np.transpose(np.vstack((fx/m,fy/m)))
 
-#Collisions module need more work before it is safe to use
-#It is per now deactivated (in function update())
+    def sizeFromMass(self,mass):
+        #Scaling so that scatter-objects are in units 
+        # of plot coordinates, not window size (pixels) 
+        size_to_mass_ratio = 100.0/self.L**2
+        return mass*size_to_mass_ratio
+    
+    def radiusFromSize(self,size):
+        size_to_radius_ratio = 0.02  #OLD TESTED VALUE 0.016
+        return size_to_radius_ratio*np.sqrt(size)
+
+    #Collisions module need more work before it is safe to use
+    #It is per now deactivated (in function update())
     def handle_collisions(self):
         size_factor = 0.004
         ones = np.ones(self.n)
@@ -87,39 +97,62 @@ class Tyngdekraft():
         x = self.obj["pos"][:,0]
         y = self.obj["pos"][:,1]
         # Calculate discances between each planet
-        dx = np.outer(ones,x) - np.outer(x,ones)
-        dy = np.outer(ones,y) - np.outer(y,ones)
-        d2 = dx**2 + dy**2
-        np.fill_diagonal(d2,np.inf)
+        deltax = np.outer(ones,x) - np.outer(x,ones)
+        deltay = np.outer(ones,y) - np.outer(y,ones)
+        delta2 = deltax**2 + deltay**2
+        np.fill_diagonal(delta2,np.inf)
         # Is their size larger than their distance?
-        s = self.obj["size"][:]
-        s2 = size_factor**2 * (np.outer(ones,s) + np.outer(s,ones))**2
+        r = self.radiusFromSize(self.obj["size"][:])
+        rsum2 = (np.outer(ones,r) + np.outer(r,ones))**2
         # Count all planets that has collided
-        collisions = np.tril(d2 <= s2)
-        deletelist = []
-        if np.sum(collisions) > 0:
-            indices = np.column_stack(np.where(collisions))
-            for ind in indices:
-                self.collision(ind)
-                deletelist.append(ind[1])
-            for i in deletelist: 
-                self.obj = np.delete(self.obj,i)
-            self.n = len(self.obj)
+        collisions = np.tril(delta2 <= rsum2)
+        #print("----------------")
+        #vx = self.obj["vel"][:,0]
+        #vy = self.obj["vel"][:,1]
+        #print("d2:",delta2)
+        #print("r2:",rsum2)
+        #print("vx:",vx)
+        #print("vy:",vy)
+        if np.sum(collisions) == 0: 
+            return 
 
-                
+        indices = np.column_stack(np.where(collisions))
+        #print("COLLISION")
+        #print(" i: ",indices)
+        #for ind in indices: 
+        #    print("ind:",ind)
+        #    for i in ind:
+        #        print("i:",i)
+        #        print("delta2;",delta2[i])
+        #        print("rsum2:",rsum2[i])
+        #        print("vx:",vx[i])
+        #        print("vy:",vy[i])
+        #self.exit_at_next_iteration = True
+        print("indices:",indices,self.n)
+        delete= []
+        for ind in indices:
+            self.collide(ind)
+            delete.append(ind[1])
+        for i in delete: 
+            self.obj = np.delete(self.obj,i)
+        self.n = len(self.obj)
+        print("delete:",delete,self.n)
 
-    def collision(self,i):
-        msum = np.sum(self.obj["mass"][i])
-        psum = np.sum(self.obj["vel"][i]*self.obj["mass"][i],0)
-        if self.obj["mass"][i[0]] < self.obj["mass"][i[1]]:
-            i = np.flip(i,0)
-        self.obj["mass"][i[0]] = msum
-        self.obj["size"][i[0]] = np.sqrt(np.sum(self.obj["size"][i]**2))
-        #self.obj["vel"][i[0],:] =  psum / msum
-        self.obj["force"][i[0],:] = np.zeros(2)
-        self.obj["acc"][i[0],:] = np.zeros(2)
-        #self.obj["size"][i[1]] = 0.0
-        #self.obj = np.delete(self.obj,i[1])
+    def collide(self,ind):
+        msum = np.sum(self.obj["mass"][ind])
+        psum = np.sum(self.obj["vel"][ind]*self.obj["mass"][ind],0)
+        ##COLLISION DIAGNOSTICS KEPT FOR NOW
+        #print("COLLIDE")
+        #print(" ind:",ind)
+        #print(" m:",self.obj["mass"][ind])
+        #print(" msum:",msum)
+        #print(" p:",self.obj["vel"][ind]*self.obj["mass"][ind])
+        #print(" psum:",psum)
+        self.obj["mass"][ind[0]] = msum
+        self.obj["size"][ind[0]] = self.sizeFromMass(msum)
+        self.obj["vel"][ind[0],:] =  psum / msum
+        self.obj["force"][ind[0],:] = np.zeros(2)
+        self.obj["acc"][ind[0],:] = np.zeros(2)
 
     def integrate_orbits(self):
         if self.n == 0:
@@ -129,7 +162,7 @@ class Tyngdekraft():
         self.obj["vel"]=self.obj["vel"]+self.obj["acc"]*self.dt
         self.obj["pos"]=self.obj["pos"]+self.obj["vel"]*self.dt
 
-    def find_center_of_gravity(self):
+    def update_center_of_gravity(self):
         msum = np.sum(self.obj["mass"])
         cogx = np.sum(self.obj["pos"][:,0]*self.obj["mass"])/msum
         cogy = np.sum(self.obj["pos"][:,1]*self.obj["mass"])/msum
@@ -142,10 +175,7 @@ class Tyngdekraft():
 ###  DIAGNOSTICTS  ###
 ######################
 ######################
-    def print_url(self):
-        return "pythonskole.no/koder/astronomi/tyngdekraft"
-
-    def print_number(self):
+    def print_collisions(self):
         return "No. of planets={:d}".format(self.n)
 
     def print_stuff(self):
@@ -153,7 +183,8 @@ class Tyngdekraft():
         vx2 = self.obj["vel"][:,0]**2 
         vy2 = self.obj["vel"][:,1]**2
         Ek  = np.sum(0.5*m*(vx2+vy2))
-        return "Ek={:.2f} cog=({:.2f},{:.2f}) n={:d}".format(Ek,self.cog[0],self.cog[1],self.n)
+        return "Ek={:.2f} cog=({:.2f},{:.2f}) n={:d}".format(
+                Ek,self.cog[0],self.cog[1],self.n)
 
     def print_energy(self):
         m   = self.obj["mass"] 
@@ -184,24 +215,29 @@ class Tyngdekraft():
         #Save to plot objects
         self.planets.set_offsets(self.obj["pos"])
         self.planets.set_sizes(self.obj["size"])
-        self.text.set_text(self.print_nothing())
         self.cogmark.set_offsets(self.cog)
-        offset = self.cog - self.midten
-        self.ax.set_xlim(self.ax.get_xlim()+offset[0])
-        self.ax.set_ylim(self.ax.get_ylim()+offset[1])
-        self.ax.set_title("Tyngdekraft (pythonskole.no)\n"+self.title)
-        self.midten = self.cog
+        if self.diagnostic_output:
+            self.text.set_text(self.print_collisions())
+        if self.follow_center_of_gravity:
+            drift = self.cog-self.center
+            self.center = self.cog
+            self.ax.set_xlim(self.ax.get_xlim()+drift[0])
+            self.ax.set_ylim(self.ax.get_ylim()+drift[1])
 
     def update(self,frame_number):
+        if self.exit_at_next_iteration:
+            input("STOPPED! Press to exit")
+            sys.exit(0)
         self.calculate_forces()
         self.integrate_orbits()
-        ##self.handle_collisions()  
-        self.find_center_of_gravity()
+        if self.activate_collisions:
+            self.handle_collisions()  
+        self.update_center_of_gravity()
         self.update_plot_objects()
         return self.planets,self.text,self.cogmark,
 
     def start(self):
-        self.find_center_of_gravity()
+        self.update_center_of_gravity()
 
         # Update velocities with a half time shift (LeapFrog Method)
         self.calculate_forces()
@@ -209,10 +245,11 @@ class Tyngdekraft():
         
         #Lag plott-vindu
         self.fig = plt.figure(figsize=(7,7))
-        self.ax = plt.axes(xlim=(0,self.L),ylim=(0,self.L))
+        self.ax = plt.axes(xlim=(-self.L,self.L),ylim=(-self.L,self.L))
 
         #Opprett plotte-objekter
-        self.text = self.ax.text(0.5,0.5,'')
+        self.ax.set_title("Tyngdekraft (pythonskole.no)\n"+self.title)
+        self.text = self.ax.text(-self.L+0.5,-self.L+0.5,'')
         self.cogmark = self.ax.scatter(self.cog[0],self.cog[1],
                 marker='x',c='red')
         self.planets = self.ax.scatter(self.obj["pos"][:,0], 
