@@ -13,6 +13,7 @@ setup(
   download_url = 'https://github.com/vegardlr/pythonskole/archive/refs/tags/v0.4.tar.gz',    # I explain this later on
   keywords = ['Pythonskole', 'Undervisning', 'Koding','Python','Programmering','Læring'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
+          'sys',
           'numpy',
           'matplotlib',
       ],

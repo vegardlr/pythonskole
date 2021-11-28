@@ -1,5 +1,6 @@
 # TEST-KODER
 *.test.py
+*.mp4
 
 # VIM
 *.swp
