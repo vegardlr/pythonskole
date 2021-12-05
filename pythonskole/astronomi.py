@@ -31,6 +31,7 @@ class Tyngdekraft():
         self.cog = self.center
         self.title = tittel
         self.max_tstep = int(1e16)
+        self.frames = 1500
         self.activate_collisions = True
         self.text_collisions = False
         self.text_energy = False
@@ -147,6 +148,9 @@ class Tyngdekraft():
         for ind in indices:
             self.collide(ind)
             delete.append(ind[1])
+
+        #Remove duplicates and sort list, from highest to lowest ID
+        delete=list(dict.fromkeys(sorted(delete, reverse=True)))
         for i in delete: 
             self.obj = np.delete(self.obj,i)
         self.n = len(self.obj)
@@ -276,6 +280,8 @@ class Tyngdekraft():
         self.integrate_orbits()
         self.update_center_of_gravity()
         self.update_plot_objects()
+        print("Frame="+str(frame_number)+"               ", end='\r')
+        sys.stdout.flush()
         return self.planets,self.text,self.cogmark,
 
     def start(self):
@@ -299,7 +305,12 @@ class Tyngdekraft():
 
         #Start animasjon
         self.anim = animation.FuncAnimation(self.fig, self.update, 
-                interval=self.interval)
+                interval=self.interval,frames=self.frames,
+                save_count=self.frames,repeat=False)
         plt.show() 
+
+        print("")
+        print("")
+        print("Wait... saving to video file")
         self.anim.save(self.video_output_file)
 
