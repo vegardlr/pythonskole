@@ -1,9 +1,8 @@
 Tyngdekraft: 
 V.1.0: 
- - Rediger eksempler til å unngå L som parameter
- - Fikse alle eksempler til nye parametere
- - Print avereage v, max v
- - Add input arguments
+	No more planned edits
 
 Framtidig fiks
  - Fix dtype syntax to future version
+ - Add more input arguments
+ - Print avereage v, max v
