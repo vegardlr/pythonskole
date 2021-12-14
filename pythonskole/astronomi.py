@@ -1,5 +1,5 @@
 ###   Pythonskole.no    Tyngdekraft    ###
-###   28.11.2021  kontakt@pythonskole.no ###
+###   14.12.2021  kontakt@pythonskole.no ###
 
 import sys
 import numpy as np
@@ -13,14 +13,11 @@ from matplotlib import animation
 ######################
 
 class Tyngdekraft():
-    def __init__(self,dt=0.03,L=20.0, tittel = 'Tyngdekraft'):
+    def __init__(self,dt=0.03,L=20.0, tittel = 'Tyngdekraft', 
+            kollisjoner = True, massesenter = True):
         #TODO: Add input paramteres
-        # - interval (fart)
-        # - max_tstep
-        # - collisions (yes/no)
         # - text_ options
         # - follow
-        # - 
         self.tstep = 0
         self.n = 0
         self.dt = dt
@@ -32,11 +29,11 @@ class Tyngdekraft():
         self.title = tittel
         self.max_tstep = int(1e16)
         self.frames = 1500
-        self.activate_collisions = True
+        self.activate_collisions = kollisjoner
         self.text_collisions = False
         self.text_energy = False
         self.text_cog = False
-        self.follow_center_of_gravity = True
+        self.follow_center_of_gravity = massesenter
         #Leave these as they are
         self.exit_at_next_iteration = False
         self.anim = None
@@ -84,11 +81,14 @@ class Tyngdekraft():
         # Calculate discances between each particle and product of masses
         dx = np.outer(ones,x) - np.outer(x,ones)
         dy = np.outer(ones,y) - np.outer(y,ones)
-        m2 = np.outer(ones,m) * np.outer(m,ones)
-        d = np.sqrt(dx**2 + dy**2)
-        np.fill_diagonal(d,np.inf)
+        Mm = np.outer(ones,m) * np.outer(m,ones)
+        #d = np.sqrt(dx**2 + dy**2)
+        #np.fill_diagonal(d,np.inf)
+        d2 = dx**2 + dy**2
+        np.fill_diagonal(d2,np.inf)
         # Calculate gravity, angle between positions, and force components
-        f  = gravity_factor*m2/d  #3D: gravity_factor*m2/d2
+        #f  = gravity_factor*Mm/d  #2D: 1/r
+        f  = gravity_factor*Mm/d2  #3D: 1/r2
         theta = np.arctan2(dy, dx)
         fx = np.sum(f * np.cos(theta),1)
         fy = np.sum(f * np.sin(theta),1)
@@ -305,12 +305,14 @@ class Tyngdekraft():
 
         #Start animasjon
         self.anim = animation.FuncAnimation(self.fig, self.update, 
-                interval=self.interval,frames=self.frames,
-                save_count=self.frames,repeat=False)
+                interval=self.interval,repeat=False)
+        #self.anim = animation.FuncAnimation(self.fig, self.update, 
+        #        interval=self.interval,frames=self.frames,
+        #        save_count=self.frames,repeat=False)
         plt.show() 
 
-        print("")
-        print("")
-        print("Wait... saving to video file")
-        self.anim.save(self.video_output_file)
+        #print("")
+        #print("")
+        #print("Wait... saving to video file")
+        #self.anim.save(self.video_output_file)
 
