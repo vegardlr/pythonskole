@@ -1,6 +1,8 @@
 # TEST-KODER
 *.test.py
 *.mp4
+*.gif
+*.csv
 
 # VIM
 *.swp
