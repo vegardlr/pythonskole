@@ -38,30 +38,42 @@ xjames   = []
 yjames   = []
 
 #Lagre initielle / startverdier for simuleringen
-tid.append(0)
+tid = 0.0
 xjord.append(Pjord[0]/AE)
 yjord.append(Pjord[1]/AE)
 xjames.append(Pjames[0]/AE)
 yjames.append(Pjames[1]/AE)
 
 # Noen tekniske linjer for å kunne animere plottet
+plot_interval = 10
 plt.ion() 
 fig, (ax1,ax2) = plt.subplots(1,2)
+ax1.set_title("Normal skala")
+ax1.set_xlabel("x (AE)")
+ax1.set_ylabel("y (AE)")
 ax1.set_aspect('equal')
 ax1.set_xlim(-1.2,1.2)
 ax1.set_ylim(-1.2,1.2)
+ax2.set_title("Forstørret")
 ax2.set_aspect('equal')
+ax2.set_xlabel("x (AE)")
 ax2.set_xlim(Pjord[0]/AE-0.1,Pjord[0]/AE+0.1)
 ax2.set_ylim(Pjord[1]/AE-0.1,Pjord[1]/AE+0.1)
-line1, = ax1.plot(0,0,'yo')
-line2, = ax1.plot(xjord,yjord,'b-')
-line3, = ax1.plot(xjames,yjames,'r-')
-line4, = ax2.plot(xjord,yjord,'b-')
-line5, = ax2.plot(xjames,yjames,'r-')
+line1, = ax1.plot(0,0,'yo',label="Solen")
+line2, = ax1.plot(xjord,yjord,'b-',label="Jorden")
+line3, = ax1.plot(xjames,yjames,'r-',label="JWST")
+line4, = ax2.plot(xjord,yjord,'b-',label="Jorden")
+line5, = ax2.plot(xjames,yjames,'r-',label="JWST")
+ax1.legend()
+ax2.legend()
 
 # Disse bruker vi for å normere tid (utskrift til terminal)
 sekunder_per_aar = 60.0*60*24*365.24
 sekunder_per_dag = 60.0*60*24
+tidssteg_per_aar = int(sekunder_per_aar / dt)
+plot_data_lengde = int(tidssteg_per_aar/plot_interval)-10
+print("Tidssteg per aar",tidssteg_per_aar)
+print("")
 
 # Denne variabler bruker vi til å holde orden på antall tidssteg
 tidssteg = 0
@@ -70,7 +82,7 @@ tidssteg = 0
 while True:
     # Oppdater tidssteg
     tidssteg += 1
-    tid.append(tid[-1]+dt)
+    tid += dt
 
     #Regn ut avstand (R) og enhetsvektor (E) mellom...
     #James Webb og Solen:
@@ -101,7 +113,8 @@ while True:
     Pjames += Vjames*dt
 
     # Skriv ut antall dager som er simulert til terminal/konsoll
-    print("Dager="+str(tid[-1]/sekunder_per_dag),end="\r")
+    print("Dager="+str(round(tid/sekunder_per_dag))+
+            "  Tidssteg="+str(tidssteg)+"    ",end="\r")
 
     # Plott data, men ikke hvert eneste tidssteg. Det tar så langt tid..
     if tidssteg % 10 == 0: #Gjør dette hvert 10'ende tidsteg
@@ -111,6 +124,12 @@ while True:
         yjord.append(Pjord[1]/AE)
         xjames.append(Pjames[0]/AE)
         yjames.append(Pjames[1]/AE)
+
+        #Kort ned lengden av det som plottes til ett år
+        xjord = xjord[-plot_data_lengde:] 
+        yjord = yjord[-plot_data_lengde:] 
+        xjames = xjames[-plot_data_lengde:] 
+        yjames = yjames[-plot_data_lengde:] 
 
         #Oppdater linjene som plottes
         line2.set_xdata(xjord)
