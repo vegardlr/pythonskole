@@ -70,11 +70,16 @@ ax2.legend()
 # Disse bruker vi for å normere tid (utskrift til terminal)
 sekunder_per_aar = 60.0*60*24*365.24
 sekunder_per_dag = 60.0*60*24
+# Denne variabler bruker vi til å holde orden på antall tidssteg
+tidssteg = 0
 #Disse bruker vi til å bestemme hvor ofte vi skal plotte
 tidssteg_per_aar = int(sekunder_per_aar / dt)
 plot_data_lengde = int(tidssteg_per_aar/plot_interval)-10
-# Denne variabler bruker vi til å holde orden på antall tidssteg
-tidssteg = 0
+=======
+tidssteg_per_aar = int(sekunder_per_aar / dt)
+plot_data_lengde = int(tidssteg_per_aar/plot_interval)-10
+print("Tidssteg per aar",tidssteg_per_aar)
+print("")
 
 # Alt er klart.
 print("SIMULERING AV JAMES WEBB OG JORDEN")
