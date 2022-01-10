@@ -14,7 +14,8 @@ G       = 6.67  * 10**(-11) #unit
 # for James Webb Space Telescope og Jorden (enhet m og m/s)
 Rjord   = 1.0 * AE 
 Vjord   = 29.78 * 10**3 
-Rjames  = 151.1 * 10**9 
+RL2     = 151.1 * 10**9 
+Rjames  = RL2*1.0000
 Vjames  = Vjord * ( Rjames / Rjord )
 
 # Sett verdier for objektenes masse (enhet kg)
@@ -29,13 +30,14 @@ Pjord   = np.array([Rjord,0.0])
 Vjord   = np.array([0.0,Vjord])
 Pjames  = np.array([Rjames,0.0])
 Vjames  = np.array([0.0,Vjames])
+PL2     = np.array([RL2,0.0])
 
 # Deklarer tomme lister hvor vi kan lagre verdier for plotting
 tid     = []
 xjord   = []
 yjord   = []
-xjames   = []
-yjames   = []
+xjames  = []
+yjames  = []
 
 #Lagre initielle / startverdier for simuleringen
 tid = 0.0
@@ -64,6 +66,8 @@ line2, = ax1.plot(xjord,yjord,'b-',label="Jorden")
 line3, = ax1.plot(xjames,yjames,'r-',label="JWST")
 line4, = ax2.plot(xjord,yjord,'b-',label="Jorden")
 line5, = ax2.plot(xjames,yjames,'r-',label="JWST")
+line6, = ax2.plot(PL2[0],PL2[1],'bx',label="L2")
+#line7, = ax2.quiver(PL2[0],PL2[1],0.0,0.0)
 ax1.legend()
 ax2.legend()
 
@@ -75,7 +79,6 @@ tidssteg = 0
 #Disse bruker vi til å bestemme hvor ofte vi skal plotte
 tidssteg_per_aar = int(sekunder_per_aar / dt)
 plot_data_lengde = int(tidssteg_per_aar/plot_interval)-10
-=======
 tidssteg_per_aar = int(sekunder_per_aar / dt)
 plot_data_lengde = int(tidssteg_per_aar/plot_interval)-10
 print("Tidssteg per aar",tidssteg_per_aar)
@@ -96,6 +99,9 @@ print("  Hastighet: ",Vjames,"m/s")
 print("")
 print("")
 
+
+#Denne skal vi bruke til å etterligne en motor på JWST
+Fmotor = np.array([0.0,0.0])
 
 # La programmet kjøre til det blir avsluttet med Ctrl+C
 while True:
@@ -122,7 +128,7 @@ while True:
 
     #Regn ut aksellerasjonen
     Ajord = Fjord/Mjord
-    Ajames = Fjames/Mjames
+    Ajames = (Fjames + Fmotor)/Mjames
 
     #Regn ut hastigheten fra akselerasjonen og forrige tidssteg
     Vjord += Ajord*dt
@@ -130,10 +136,23 @@ while True:
     #Regn ut posisjonen fra hastigheten og forrige tidsteg
     Pjord += Vjord*dt
     Pjames += Vjames*dt
+    #Finn den nye posisjonen til L2 (utifra Pjord)
+    PL2 = RL2 * Pjord / np.linalg.norm(Pjord)
+    #Finn hvor hvor James Webb er ift. L2
+    Rjames_L2 = np.linalg.norm(Pjames-PL2) 
+    Ejames_L2 = (Pjames-PL2) / Rjames
+    if(Rjames_L2 > 100000.0):
+        Fmotor = -Ejames_L2 * G * Mjord * Mjames / Rjames_L2**2
+    else:
+        Fmotor = np.array([0.0,0.0])
+    
 
     # Skriv ut antall dager som er simulert til terminal/konsoll
     print("Dager="+str(round(tid/sekunder_per_dag))+
-            "  Tidssteg="+str(tidssteg)+"    ",end="\r")
+            "  Tidssteg="+str(tidssteg)+
+            "  Avstand til L2="+str(round(Rjames_L2,0))+
+            "  Fmotor="+str(Fmotor)+
+            "        ",end="\r")
 
     # Plott data, men ikke hvert eneste tidssteg. Det tar så langt tid..
     if tidssteg % 10 == 0: #Gjør dette hvert 10'ende tidsteg
@@ -159,10 +178,14 @@ while True:
         line3.set_ydata(yjames)
         line5.set_xdata(xjames)
         line5.set_ydata(yjames)
+        line6.set_xdata(PL2[0]/AE)
+        line6.set_ydata(PL2[1]/AE)
+#        line7.set_offsets([Pjames[0],Pjames[1]])
+#        line7.set_UVC(Fmotor)
 
         #Juster vinduet som følger James Webb og Jorden
-        ax2.set_xlim(Pjord[0]/AE-0.03,Pjord[0]/AE+0.03)
-        ax2.set_ylim(Pjord[1]/AE-0.03,Pjord[1]/AE+0.03)
+        ax2.set_xlim(PL2[0]/AE-0.010,PL2[0]/AE+0.010)
+        ax2.set_ylim(PL2[1]/AE-0.010,PL2[1]/AE+0.010)
 
         #Tegn det nye plottet
         fig.canvas.draw()
