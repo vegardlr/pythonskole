@@ -1,0 +1,7 @@
+image:
+  file: .gitpod.dockerfile
+tasks:
+  - init: pip install -e .
+vscode: 
+extensions:
+  - ms-python.python
