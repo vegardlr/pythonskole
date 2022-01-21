@@ -6,3 +6,37 @@ Framtidig fiks
  - Fix dtype syntax to future version
  - Add more input arguments
  - Print avereage v, max v
+
+
+
+JWST: 
+ bytte til pylab
+ sette kraft i funksjon
+ rydde opp i integrasjon (samle s,v,a for respektive objekter)
+ kommentar som sier at det er Euler-Kromer (opsjon med leapfrog)
+ 
+
+
+Waqas: 
+  oalle connect-funksjonene bør ha en Try Except-håndtering av feil
+  lag en connect_from_selction_list (user input) (start på 1)
+  kan vi aksessere lagrede data lokalt på enheten?
+  feilhåndtering ved lesing av data 'None': 
+
+Traceback (most recent call last):
+  File "/astro/usr/anaconda3/lib/python3.8/site-packages/pasco/pasco_ble_device.py", line 861, in _decode_data
+    result_value = self._get_measurement_value(sensor_id, m_id)
+  File "/astro/usr/anaconda3/lib/python3.8/site-packages/pasco/pasco_ble_device.py", line 1002, in _get_measurement_value
+    temp_c = float(dewpoint_vals[0])
+ValueError: could not convert string to float: 'None'
+
+
+Traceback (most recent call last):
+  File "/astro/usr/anaconda3/lib/python3.8/site-packages/pasco/pasco_ble_device.py", line 861, in _decode_data
+    result_value = self._get_measurement_value(sensor_id, m_id)
+  File "/astro/usr/anaconda3/lib/python3.8/site-packages/pasco/pasco_ble_device.py", line 1015, in _get_measurement_value
+    wind_mph = float(windchill_vals[1]) * 2.237
+ValueError: could not convert string to float: 'None'
+
+  
+

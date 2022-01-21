@@ -41,9 +41,9 @@ if not device.is_connected():
     exit(0)
 
 #Print list of sensors on device
-print("Sensor list:",device.get_sensor_list())
+print("Sensor list:", device.get_sensor_list())
 #Print list of measurments available with the sensors
-print("Measurement list:",device.get_measurement_list())
+print("Measurement list:", device.get_measurement_list())
 
 #Clean disconnect. If the code exists with an error between 
 #device.connect() and device.disconnect(), the devices will blink
