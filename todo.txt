@@ -7,15 +7,11 @@ Framtidig fiks
  - Add more input arguments
  - Print avereage v, max v
 
-
-
 JWST: 
  bytte til pylab
  sette kraft i funksjon
  rydde opp i integrasjon (samle s,v,a for respektive objekter)
  kommentar som sier at det er Euler-Kromer (opsjon med leapfrog)
- 
-
 
 Waqas: 
   oalle connect-funksjonene bør ha en Try Except-håndtering av feil
@@ -38,5 +34,4 @@ Traceback (most recent call last):
     wind_mph = float(windchill_vals[1]) * 2.237
 ValueError: could not convert string to float: 'None'
 
-  
 
