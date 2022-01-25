@@ -21,11 +21,11 @@ if len(device_list) == 0:
 
 # Print the list of devices
 for i, dev in enumerate(device_list):
-    print(str(i)+":"+str(dev))
+    print(str(i+1)+":"+str(dev))
 # Get user input which device you want. 
 # If there is only one, select that device automatically
 select = input('Select a device: ') if len(device_list) > 1 else 0
-select_device = device_list[int(select)]
+select_device = device_list[int(select-1)]
 #Print the name and ID of the selected device, and connect
 print("Connecting to:"+str(select_device))
 device.connect(select_device)
