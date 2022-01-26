@@ -1,41 +1,24 @@
 #CODE: pasco-temperature-live.py
-#Version: 20.10.2021
+#Version: 26.1.2022
 #Author: Vegard Rekaa, Pythonskole.no
 #kontakt@pythonskole.no
 
 # Documentation: https://pypi.org/project/pasco/
 from pasco.pasco_ble_device import PASCOBLEDevice
 
+from time import time
 from matplotlib import animation
 import matplotlib.pyplot as plt
-import time
-import numpy as np #We only need polyfit here
+from numpy import polyfit
 
+#Connect to the PASCO device. 
 device = PASCOBLEDevice()
-available_devices = device.scan()
-n = len(available_devices)
-print("Found ",n," devices")
-for dev in available_devices: 
-    print(dev)
-if n == 0: 
-    print("Exiting")
-    exit(0)
-
-device_id = '508-699'
-print("Connecting to my temperature sensor: ",device_id)
+print(device.scan())
+device_id = '508-699' #Change ID to your sensor
 device.connect_by_id(device_id)
 
-#print("Connecting to the first device in the list")
-#print("Device: "+str(available_devices[0]))
-#device.connect(available_devices[0])
-if not device.is_connected():
-    print("Connection failed")
-    exit(0)
-
-device.keepalive()
-
 #set up the experiment
-tid_start = time.time()
+tid_start = time()
 tid = 0
 xmin = 0
 xmax = 120.0
@@ -50,19 +33,26 @@ y2data = []
 
 
 def curvefit():
-    #Linear curve fit
-    #if len(xdata) < 2:
-    #    a,b = 0.0,0.0
-    #else:
-    #    a,b = np.polyfit(xdata,y1data,1)
-    #return [a*x + b for x in xdata]
-    #Fourth order polynomial curve fit
-    if len(xdata) < 5:
-        a,b,c,d,e = 0.0,0.0,0.0,0.0,0.0
+    #Second order polynomial curve fit
+    if len(xdata) < 3:
+        a,b,c = 0.0,0.0
     else:
-        a,b,c,d,e = np.polyfit(xdata,y1data,4)
-    return [a*x**4 + b*x**3 + c*x**2 + d*x + e for x in xdata]
+        a,b,c = polyfit(xdata,y1data,1)
+    return [a*x*x + b*x + c for x in xdata]
 
+    #Fourth order polynomial curve fit
+    #if len(xdata) < 5:
+    #    a,b,c,d,e = 0.0,0.0,0.0,0.0,0.0
+    #else:
+    #    a,b,c,d,e = polyfit(xdata,y1data,4)
+    #return [a*x**4 + b*x**3 + c*x**2 + d*x + e for x in xdata]
+
+
+############################################
+### EVERYTHING BELOW HERE IS VOODO MAGIC ###
+###        READ AT YOUR OWN RISK         ###
+###    (you might learn something new)   ###
+############################################
 
 #Set up figure, axis and plot element
 fig = plt.figure()
@@ -93,7 +83,7 @@ def init():
 
 # animation function.  This is called sequentially
 def animate(i):
-    tid = time.time()-tid_start
+    tid = time()-tid_start
     print("Frame:{0:3d} Tid:{1:6.2f}s  fps={2:4.1f}".\
             format(i,tid,i/tid),end='\r')
     xdata.append(tid)
@@ -104,15 +94,10 @@ def animate(i):
     return lines
 
 
-# call the animator
+# call the animator (this is voodo magic)
 print("Max iterations:",max_iterations)
 anim = animation.FuncAnimation(fig, animate, init_func=init,
             frames=max_iterations, interval=interval, repeat=False)
 
-#handles,labels = ax.get_legend_handles_labels()
-#plt.legend(handles,labels)
 plt.show()
-
 device.disconnect()
-
-

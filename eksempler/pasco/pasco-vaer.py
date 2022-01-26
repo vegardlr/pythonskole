@@ -12,7 +12,7 @@ codenode = CodeNodeDevice()
 #['Temperature', 'RelativeHumidity', 'AbsoluteHumidity', 'BarometricPressure', 'WindSpeed', 'DewPoint', 'WindChill', 'Humidex', 'SatelliteCount', 'Latitude', 'Longitude', 'Altitude', 'Speed', 'UVIndex', 'Illuminance', 'SolarIrradiance', 'SolarPAR', 'WindDirection', 'MagneticHeading', 'TrueHeading']
 
 device_id = '920-323'
-data = 'Illuminance'
+data = 'DewPoint'
 device.connect_by_id(device_id)  #Endre ID til din sensor
 enhet = device.get_measurement_unit(data)
 
@@ -20,8 +20,8 @@ enhet = device.get_measurement_unit(data)
 #Vi bruker en //code.Node til enkel output til bruker
 #//code.Node har følgende data tilgjengelig: 
 #['Temperature', 'Brightness', 'Loudness', 'MagneticFieldStrength', 'Accelerationx', 'Accelerationy', 'TiltAngleX', 'TiltAngleY', 'CartPosition', 'CartVelocity', 'Button1', 'Button2']
-codenode_id = '479-256'
-codenode.connect_by_id(codenode_id)
+#codenode_id = '479-256'
+#codenode.connect_by_id(codenode_id)
 
 x = []
 y = []
@@ -32,16 +32,16 @@ for i in range(0,100):
     x.append(tid)
     y.append(verdi)
     print(str(verdi)+enhet)
-    time.sleep(1)
-    if codenode.read_data('Button1') == 1:
-        temperatur = device.read_data('Temperature')
-        print("Temperatur=",temperatur,"*C")
+#    time.sleep(1)
+#    if codenode.read_data('Button1') == 1:
+#        temperatur = device.read_data('Temperature')
+#        print("Temperatur=",temperatur,"*C")
 
 
 
 
 device.disconnect()
-codenode.disconnect()
+#codenode.disconnect()
 
 plot(x,y)
 ylabel("Illuminance (lux)")
