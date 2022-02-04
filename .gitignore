@@ -3,6 +3,7 @@
 *.mp4
 *.gif
 *.csv
+*.png
 
 # VIM
 *.swp
