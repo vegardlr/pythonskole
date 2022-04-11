@@ -1,13 +1,14 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from astropy.visualization import astropy_mpl_style
-plt.style.use(astropy_mpl_style)
-from matplotlib.colors import LogNorm
-from astropy.utils.data import get_pkg_data_filename
-from astropy.io import fits
-
 from os import listdir
 from os.path import isfile, join
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
+
+from astropy.io import fits
+from astropy.visualization import astropy_mpl_style
+from astropy.utils.data import get_pkg_data_filename
+plt.style.use(astropy_mpl_style)
 
 
 class Frame:
