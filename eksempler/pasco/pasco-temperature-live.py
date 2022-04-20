@@ -14,7 +14,7 @@ from numpy import polyfit
 #Connect to the PASCO device. 
 device = PASCOBLEDevice()
 print(device.scan())
-device_id = '508-699' #Change ID to your sensor
+device_id = '940-072' #Change ID to your sensor
 device.connect_by_id(device_id)
 
 #set up the experiment
