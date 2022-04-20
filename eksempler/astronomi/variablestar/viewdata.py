@@ -1,8 +1,14 @@
+import sys
 import numpy as np
 from astropy.time import Time
 import matplotlib.pyplot as plt
 
-datafolder = "U-gem"
+
+if len(sys.argv) < 2:
+    print("Usage: getdata.py datafolder")
+    sys.exit(1)
+
+datafolder = sys.argv[1]
 datafile = datafolder+"/data.txt"
 
 f = open(datafile,'r')
