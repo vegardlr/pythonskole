@@ -25,7 +25,7 @@ for i, dev in enumerate(device_list):
 # Get user input which device you want. 
 # If there is only one, select that device automatically
 select = input('Select a device: ') if len(device_list) > 1 else 0
-select_device = device_list[int(select-1)]
+select_device = device_list[int(select)-1]
 #Print the name and ID of the selected device, and connect
 print("Connecting to:"+str(select_device))
 device.connect(select_device)
@@ -38,7 +38,18 @@ if not device.is_connected():
 #Print list of sensors on connected device
 print("Sensor list:", device.get_sensor_list())
 #Print list of measurments available from the connected device
-print("Measurement list:", device.get_measurement_list())
+measurement_list = device.get_measurement_list()
+print("Measurement list:", measurement_list)
+
+for i, mes in enumerate(measurement_list):
+    print(str(i+1)+":"+str(mes))
+select = input('Select a measurement: ') if len(measurement_list) > 1 else 0
+#print(select)
+#print(len(measurement_list))
+measurement = measurement_list[int(select)-1]
+print(measurement)
+print("Result: "+str(device.read_data(measurement))+" "+\
+        device.get_measurement_unit(measurement))
 
 #Clean disconnect. 
 device.disconnect()
