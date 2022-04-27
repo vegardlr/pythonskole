@@ -96,4 +96,5 @@ for fits_file in fitsfiles:
     a = input("Done?")
 
 
-
+#LIbrary: https://stak-notebooks.readthedocs.io/_/downloads/en/latest/pdf/
+#Image analysis: OpenCV
