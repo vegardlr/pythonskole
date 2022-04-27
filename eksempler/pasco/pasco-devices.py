@@ -53,4 +53,3 @@ print("Result: "+str(device.read_data(measurement))+" "+\
 
 #Clean disconnect. 
 device.disconnect()
-

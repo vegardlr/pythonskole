@@ -10,6 +10,7 @@ adjektiv = ["Kule","Gale","Mystisk","Hoppete","Grønne","Friske",
 substantiv = ["Frosker","Musikere","Poeter","Arbeidsfolk","Sangere",
         "Bøller"]
 
-i=randint(len(adjektiv))
-j=randint(len(substantiv))
-print(adjektiv[i]+" "+substantiv[j])
+adj = choice(adjektiv)
+sub = choice(substantiv)
+
+print(adj+" "+sub)
