@@ -35,7 +35,7 @@ modell.nyttObjekt([0,0],[0,0],500.)
 #Ved å gjenta de neste linjene med kode mange ganger. Til hver gang 
 #et nytt objekt lages trekkes verdier for posisjon, hastighet og 
 #størrelse som tilfeldige tall
-for i in range(100): #Øk dette talletom du vil ha flere små-objekter
+for i in range(500): #Øk dette talletom du vil ha flere små-objekter
 
     #Hvert objekt får masse som er trukket fra et tilfeldig tall
     #mellom 1.0 og 1.5
