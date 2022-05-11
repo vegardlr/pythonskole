@@ -25,7 +25,7 @@ writer = csv.writer(f)
 codenode = CodeNodeDevice()
 codenode.connect_by_id('354-873')  #NB Endre til ID på din //code.Node
 codenode.keepalive()
-o2sensor = PASCOBLEDevice()
+ = PASCOBLEDevice()
 o2sensor.connect_by_id('574-083')  #NB Endre ID til din O2-sensor
 o2sensor.keepalive()
 co2sensor = PASCOBLEDevice()

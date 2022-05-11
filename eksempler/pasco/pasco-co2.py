@@ -4,7 +4,7 @@
 
 from pasco.pasco_ble_device import PASCOBLEDevice
 co2sensor = PASCOBLEDevice()
-co2sensor.connect_by_id('429-980')  #Endre ID til din CO2-sensor
+co2sensor.connect_by_id('181-000')  #Endre ID til din CO2-sensor
 for i in range(0,10):
     verdi = co2sensor.read_data('CO2Concentration')
     if verdi > 700:

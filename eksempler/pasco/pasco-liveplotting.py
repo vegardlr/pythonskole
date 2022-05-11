@@ -11,11 +11,10 @@ import time
 import numpy as np
 import csv
 
-
 ##############################################################
 #Edit this section: 
 ##############################################################
-device_id = '469-773'       #Change to you sensor
+device_id = '469-021'       #Change to you sensor
 data      = 'Accelerationx' #Choose from the list of available data
 measure_time = 15.0         #Say how many seconds you want to measure
 ymin =  8                   #What max/min y-values do you expect

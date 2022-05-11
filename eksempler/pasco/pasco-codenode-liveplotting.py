@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 import time
 import numpy as np
 
-
 ##############################################################
 #Edit this section: 
 ##############################################################
@@ -21,7 +20,7 @@ import numpy as np
 # 'Temperature', 'Brightness', 'Loudness', 'MagneticFieldStrength', 
 # 'Accelerationx', 'Accelerationy', 'TiltAngleX', 'TiltAngleY', 
 # 'CartPosition', 'CartVelocity', 'Button1', 'Button2'
-data    = 'Accelerationy'   #Choose from the list above
+data    = 'Accelerationx'   #Choose from the list above
 measure_time = 15.0         #Say how many seconds you want to measure
 ymin =  -15                  #What max/min y-values do you expect
 ymax =  15
@@ -56,42 +55,8 @@ if not codenode.is_connected():
     print("Connection failed")
     exit(0)
 
-#Prevent the device to disconnect after 5 minutes
-codenode.keepalive()
-
-led_list = [[0,0],[1,1], [3,3], [2,2], [4,4]]
-codenode.set_leds_in_array(led_list, 128)
-time.sleep(1)
-codenode.set_sound_frequency(440)
-time.sleep(1)
-led_list = [[0,4],[1,3], [2,2], [3,1], [4,0]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_rgb_led(0, 50, 150)
-time.sleep(1)
-led_list = [[0,0],[1,1], [3,3], [2,2], [4,4]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_rgb_led(150, 50, 0)
-time.sleep(1)
-led_list = [[0,4],[1,3], [2,2], [3,1], [4,0]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_rgb_led(150, 150, 50)
-time.sleep(1)
-led_list = [[0,0],[1,1], [3,3], [2,2], [4,4]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_rgb_led(0, 50, 150)
-time.sleep(1)
-led_list = [[0,4],[1,3], [2,2], [3,1], [4,0]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_rgb_led(150, 50, 0)
-time.sleep(1)
-led_list = [[0,0],[1,1], [3,3], [2,2], [4,4]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_rgb_led(150, 150, 50)
-time.sleep(1)
-led_list = [[0,4],[1,3], [2,2], [3,1], [4,0]]
-codenode.set_leds_in_array(led_list, 128)
-codenode.set_sound_frequency(0)
-time.sleep(2)
+smilemunn = [[0,0],[4,0],[2,1],[0,2],[1,3],[2,3],[3,3],[4,2]]
+codenode.set_leds_in_array(smilemunn)
 
 #Setup data storage and plotting parameters
 xdata   = []
@@ -120,15 +85,10 @@ def init():
 def animate(i):
     tid = time.time()-t_start
     verdi = codenode.read_data(data)
+    print("Lest data:",verdi)
     xdata.append(tid)
     ydata.append(verdi)
     line.set_data(xdata,ydata)
-    if dump_data: 
-        print("Frame:{0:3d} Tid:{1:6.2f}s  fps={2:4.1f}  "+data+"={3:10.4f}".\
-            format(i,tid,i/tid,verdi),end='\r')
-    else: 
-        print("Frame:{0:3d} Tid:{1:6.2f}s  fps={2:4.1f}".\
-                format(i,tid,i/tid),end='\r')
     return line,
 
 # call the animator.  blit=True means only re-draw the parts that have changed.

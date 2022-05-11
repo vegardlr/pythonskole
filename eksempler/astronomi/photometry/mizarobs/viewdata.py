@@ -18,12 +18,25 @@ tid = Time(data[:,0],format='jd').to_value('datetime64')
 mag = data[:,1]
 
 plt.plot(tid,mag,'.')
+plt.grid(False)
 plt.xlabel("Tid")
 plt.ylabel("Mag")
 plt.title(datafolder)
 ax = plt.gca()
 ax.invert_yaxis()
 plt.show()
+
+hours = np.timedelta64(tid[1]-tid[0],'h').astype(float)
+seconds = np.timedelta64(tid[1]-tid[0],'s').astype(float)
+
+#N    = len(mag)
+#tid_sec = #TODO gjør om tid til en array med sekunder siden start
+#tid2 = np.linspace(seconds,len(mag))
+#mag2 = np.interp(tid2,tid,mag)
+
+
+#plt.plot(tid2,mag2,'-')
+#plt.show()
 
 
 #ps = np.abs(np.fft.fft(mag))**2
