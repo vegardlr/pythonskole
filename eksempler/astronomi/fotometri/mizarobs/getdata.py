@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 import os,sys
 import urllib.request
 import numpy as np
 import matplotlib.pyplot as plt
 
+sys.exit(1)
 
 if len(sys.argv) < 3: 
     print("Usage getdata.py datafolder url")
