@@ -18,7 +18,7 @@ tid = Time(data[:,0],format='jd').to_value('datetime64')
 mag = data[:,1]
 
 plt.plot(tid,mag,'.')
-plt.grid(False)
+plt.grid(True)
 plt.xlabel("Tid")
 plt.ylabel("Mag")
 plt.title(datafolder)
