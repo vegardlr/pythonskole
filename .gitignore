@@ -2,7 +2,6 @@
 *.test.py
 *.mp4
 *.gif
-*.csv
 *.png
 
 # VIM
