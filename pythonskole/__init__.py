@@ -1,1 +1,1 @@
-from .astronomi.py import Tyngdekraft
+from astronomi import Tyngdekraft

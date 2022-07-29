@@ -1,11 +1,9 @@
 #TODO: Implement src-structure from https://www.freecodecamp.org/news/how-to-create-and-upload-your-first-python-package-to-pypi/
 #from distutils.core import setup
 import setuptools
-from pathlib import Path
 
-#this_directory = Path(__file__).parent
-#long_description = (this_directory / "README.md").read_text()
-version = '1.0.2'
+version = '1.0.3'
+
 with open("README.md", "r", encoding = "utf-8") as fh:
     long_description = fh.read()
 
