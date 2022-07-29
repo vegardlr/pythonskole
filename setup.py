@@ -5,7 +5,7 @@ from pathlib import Path
 
 #this_directory = Path(__file__).parent
 #long_description = (this_directory / "README.md").read_text()
-version = '1.0.0'
+version = '1.0.1'
 with open("README.md", "r", encoding = "utf-8") as fh:
     long_description = fh.read()
 
@@ -22,7 +22,7 @@ setuptools.setup(
   license           ='gpl-3.0',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   download_url      = 'https://github.com/vegardlr/pythonskole/archive/refs/tags/v'+version+'.tar.gz',    # I explain this later on
   keywords          = ['Pythonskole', 'Undervisning', 'Koding','Python','Programmering','Læring'],   # Keywords that define your package best
-  install_requires  = ['sys', 'numpy', 'matplotlib'],
+  install_requires  = ['numpy', 'matplotlib'],
   # Development Status: "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
   classifiers=[
     'Development Status :: 4 - Beta',  
