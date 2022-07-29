@@ -32,4 +32,3 @@ Les mer på [pythonskole.no] for eksempler og forklaring på disse kodene. Du ka
 [//]: # 
    [pythonskole.no]: <https://pythonskole.no>
    [github.com]: <https://github.com/vegardlr/pythonskole.git>
-   
