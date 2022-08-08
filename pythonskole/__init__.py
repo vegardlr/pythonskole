@@ -1,1 +1,1 @@
-from astronomi import Tyngdekraft
+from .astronomi import Tyngdekraft

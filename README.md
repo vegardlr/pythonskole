@@ -18,7 +18,7 @@ Om du allerede har installert pythonskole-biblioteket, kan du oppgradere til sis
 ## Tyngdekraft
 Kodeeksempler med Tyngdekraft-modulen
 
-	from pythonskole.astronomi import Tyngdekraft
+	from pythonskole import Tyngdekraft
 	modell = Tyngdekraft(L=10.0,tittel="Ellipse")
 	#Nytt objekt i origo, med null hastighet og masse=500. 
 	modell.nyttObjekt([0,0],[0,0],500.) 

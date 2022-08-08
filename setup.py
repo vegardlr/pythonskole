@@ -2,7 +2,7 @@
 #from distutils.core import setup
 import setuptools
 
-version = '1.0.3'
+version = '1.0.4'
 
 with open("README.md", "r", encoding = "utf-8") as fh:
     long_description = fh.read()
